@@ -76,23 +76,22 @@
 
     function recipes_sort()
     {
-        const WORDS = [...recipes_CURRENT_WORDS, ...recipes_FILTERS]
-
-        for (let i = 0; i < WORDS.length; i++)
+        [...recipes_CURRENT_WORDS, ...recipes_FILTERS].forEach(word =>
         {
-            const
-            WORD  = WORDS[i],
-            MATCH = Recipe.__recipe_TREE.tree_match(WORD)
+            const MATCH = Recipe.__recipe_TREE.tree_match(word)
             
             if (!MATCH) return recipes_updateDisplay(recipes_CURRENT_RECIPES, true)
         
-            for (const RECIPE of recipes_CURRENT_RECIPES) if (!MATCH.has(RECIPE))
+            recipes_CURRENT_RECIPES.forEach(recipe =>
             {
-                RECIPE.recipe_updateDisplay('add')
-
-                recipes_CURRENT_RECIPES.delete(RECIPE)
-            }
-        }
+                if (!MATCH.has(recipe))
+                {
+                    recipe.recipe_updateDisplay('add')
+    
+                    recipes_CURRENT_RECIPES.delete(recipe)
+                }
+            })
+        })
 
         recipes_updateDisplay(recipes_CURRENT_RECIPES, false)
         
